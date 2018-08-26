@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  quiz-prod:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: docker.io/sanchitsharma98/quiz_app:latest
+    container_name: quiz-prod
+    env_file: Docker/env/.env
+    working_dir: /root/src/quiz_app
+    entrypoint:
+        - /bin/bash
+        - -c
+        - |
+            gunicorn lms_assignment.wsgi -b 0.0.0.0:80 --workers 2 -k gevent --worker-connections 256 --timeout 300 --log-level info --limit-request-line 8190 --access-logfile -
+    ports:
+        - "127.0.0.1:80:80"
+    networks:
+        quiz_app:
+            ipv4_address: 172.40.0.1
+    volumes:
+        - .:/root/src/quiz_app
+    depends_on:
+        - "postgres-quiz"
+
+  postgres-quiz:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: postgres:10.5
+    container_name: postgres-quiz
+    env_file: Docker/env/.env
+    ports:
+        - "5435:5432"
+    volumes:
+        - postgres-quiz-volume:/var/lib/postgresql/data/pgdata
+    networks:
+        quiz_app:
+            ipv4_address: 172.40.0.2
+#    healthcheck:
+#      test: "pg_isready -h localhost -p 5432 -q -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+#      interval: 10s
+#      timeout: 10s
+#      retries: 5
+
+
+networks:
+    quiz_app:
+        external:
+            name: quiz_app
+
+volumes:
+    postgres-quiz-volume:
+        external: true

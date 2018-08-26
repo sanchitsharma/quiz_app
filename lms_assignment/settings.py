@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'lms_assignment.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': 'localhost',
+        'PORT': '5435'
     }
 }
 # Internationalization
