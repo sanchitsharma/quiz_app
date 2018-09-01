@@ -10,19 +10,43 @@ services:
     env_file: Docker/env/.env
     working_dir: /root/src/quiz_app
     entrypoint:
+        - /usr/bin/python
         - /bin/bash
         - -c
         - |
-            gunicorn lms_assignment.wsgi -b 0.0.0.0:80 --workers 2 -k gevent --worker-connections 256 --timeout 300 --log-level info --limit-request-line 8190 --access-logfile -
+            import os
+            import sys
+            import bjoern
+            from django.core.wsgi import get_wsgi_application
+            application = get_wsgi_application()
+            bjoern.run(application,'0.0.0.0',9104)
+
     ports:
-        - "127.0.0.1:80:80"
+        - "127.0.0.1:8101:80"
     networks:
         quiz_app:
-            ipv4_address: 172.40.0.1
+            ipv4_address: 172.40.0.3
     volumes:
         - .:/root/src/quiz_app
     depends_on:
         - "postgres-quiz"
+
+  quiz-nginx:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: docker.io/library/nginx:1.15.3
+    container_name: quiz-nginx
+    env_file: Docker/env/.env
+    ports:
+        - "80:80"
+    networks:
+        quiz_app:
+            ipv4_address: 172.40.0.4
+    volumes:
+      - ./Docker/confs/sites-enabled:/etc/nginx/sites-enabled
+    depends_on:
+        - "quiz-prod"
 
   postgres-quiz:
     stdin_open: true
@@ -34,7 +58,7 @@ services:
     ports:
         - "5435:5432"
     volumes:
-        - postgres-quiz-volume:/var/lib/postgresql/data/pgdata
+        - postgres-quiz-volume:/var/lib/postgresql/data
     networks:
         quiz_app:
             ipv4_address: 172.40.0.2
