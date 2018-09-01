@@ -10,8 +10,7 @@ services:
     env_file: Docker/env/.env
     working_dir: /root/src/quiz_app
     entrypoint:
-        - /usr/bin/python
-        - /bin/bash
+        - /usr/bin/python3
         - -c
         - |
             import os
@@ -19,7 +18,7 @@ services:
             import bjoern
             from django.core.wsgi import get_wsgi_application
             application = get_wsgi_application()
-            bjoern.run(application,'0.0.0.0',9104)
+            bjoern.run(application,'0.0.0.0',8101)
 
     ports:
         - "127.0.0.1:8101:80"
