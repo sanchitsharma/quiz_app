@@ -10,10 +10,10 @@ server {
         #ssl_certificate           /etc/nginx/ssl/fullchain.crt;
         #ssl_certificate_key       /etc/nginx/ssl/star.zenatix.com.key;
         server_name      quiz.solutions4free.com;
-        listen 443      ssl; #http2;
+        listen 81      ;#ssl; #http2;
 
         location / {
-                proxy_pass  http://localhost:8101/;
+                proxy_pass  http://172.40.0.3:8101/;
 		proxy_redirect     off;
 	        proxy_set_header   Host $host;
         	proxy_set_header   X-Real-IP $remote_addr;
@@ -28,8 +28,8 @@ server {
         }
 }
 
-server {
-	listen 80;
-	server_name energy.zenatix.com;
-	return 302 https://$host$request_uri;
-}
+#server {
+#	listen 80;
+#	server_name localhost;
+#	return 302 https://$host$request_uri;
+#}
