@@ -1,9 +1,12 @@
 from django.urls import include, path
-
+from django.conf.urls import url
 from classroom.views import classroom, students, teachers
+from django.contrib import admin
 
+admin.autodiscover()
 urlpatterns = [
     path('', include('classroom.urls')),
+    path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', students.StudentSignUpView.as_view(), name='signup'),
     # path('accounts/signup/', classroom.SignUpView.as_view(), name='signup'),
