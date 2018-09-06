@@ -7,6 +7,7 @@ import datetime
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=10,null=True,blank=True)
 
 
 class Subject(models.Model):
@@ -22,13 +23,15 @@ class Subject(models.Model):
         html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
         return mark_safe(html)
 
+def get_current_date():
+    return datetime.datetime.today().date
 
 class Quiz(models.Model):
+
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quizzes')
     name = models.CharField(max_length=255)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='quizzes')
-    date = models.DateField(max_length=12, default=datetime.datetime.today().strftime('%Y-%m-%d')
-, null=True)
+    date = models.DateField(max_length=12, default=get_current_date, null=True)
 
     def __str__(self):
         return self.name
