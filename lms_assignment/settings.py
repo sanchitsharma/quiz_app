@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.admin',
     'crispy_forms',
     'classroom',
 ]
@@ -95,7 +96,8 @@ DATABASES = {
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
+# PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static/')
 USE_I18N = True
 
 USE_L10N = True
@@ -108,7 +110,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
+STATICFILES_DIRS = ['admin',
     os.path.join(BASE_DIR, 'static'),
 ]
 
