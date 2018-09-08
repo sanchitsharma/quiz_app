@@ -25,8 +25,8 @@ services:
             bjoern.run(application,'0.0.0.0',8101)
 
     ports:
-        - "127.0.0.1:8101:80"
-        - "8080:8080"
+        - "8101:8101"
+        #- "8080:8080"
     networks:
         quiz_app:
             ipv4_address: 172.40.0.3
